@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animation Example</title>
+  <style>
+    #box1, #box2, #box3 {
+      width: 50px;
+      height: 50px;
+      background-color: blue;
+      position: absolute;
+      top: 0;
+    }
+    #box1 { top: 50px; }
+    #box2 { top: 100px; }
+    #box3 { top: 150px; }
+  </style>
+</head>
+<body>
+  <div id="box1"></div>
+  <div id="box2"></div>
+  <div id="box3"></div>
+  <label for="frequency">Interval Frequency (ms) for box2 : </label>
+  <input type="number" id="frequency2" value="16">
+  <label for="frequency">Interval Frequency (ms) for box3 : </label>
+  <input type="number" id="frequency3" value="16">
+	
+	
+	
+  <script>
+    const box1 = document.getElementById('box1');
+    const box2 = document.getElementById('box2');
+    const box3 = document.getElementById('box3');
+    const frequencyInput2 = document.getElementById('frequency2');
+	const frequencyInput3 = document.getElementById('frequency3');
+	
+	  
+    let position1 = 0;
+    let position2 = 0;
+    let position3 = 0;
+    let intervalId2, intervalId3;
+
+	 function moveBoxUsingRAF() {
+      position1 = (position1 + 1) % window.innerWidth;
+      box1.style.left = `${position1}px`;
+      window.requestAnimationFrame(moveBoxUsingRAF);
+    }
+	  
+    function moveBoxUsingInterval(box, position) {
+      position = (position + 1) % window.innerWidth;
+      box.style.left = `${position}px`;
+      return position;
+    }
+
+    function startIntervals() {
+      const frequency2 = parseInt(frequencyInput2.value);
+	  const frequency3 = parseInt(frequencyInput3.value);
+	
+	
+      intervalId2 = setInterval(() => {
+        position2 = moveBoxUsingInterval(box2, position2);
+      }, frequency2);
+      intervalId3 = setInterval(() => {
+        position3 = moveBoxUsingInterval(box3, position3);
+      }, frequency3);
+    }
+
+	function reset(){
+    	position1 = 0
+		position2 = 0
+		position3 = 0
+	}
+	
+    function stopIntervals() {
+      clearInterval(intervalId2);
+      clearInterval(intervalId3);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+	  window.requestAnimationFrame(moveBoxUsingRAF)
+      startIntervals();
+      frequencyInput2.addEventListener('change', () => {
+        stopIntervals();
+		reset()
+        startIntervals();
+      });
+	  frequencyInput3.addEventListener('change', () => {
+        stopIntervals();
+		reset()
+        startIntervals();
+      });
+    });
+  </script>
+</body>
+</html>
